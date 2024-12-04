@@ -7,8 +7,30 @@ import User from './routes/user/user.component'
 import MyMeetings from './routes/my-meetings/my-meetings.component'
 import OnlineMeet from './routes/online-meet/online-meet.component'
 import OfflineMeet from './routes/offline-meet/offline-meet.component'
+import DataLoader from './components/data-loader/data-loader.component'
+import { AuthContext } from './contexts/auth-context.context'
+import { useContext,useState,useEffect } from 'react'
+import { onAuthStateChanged } from 'firebase/auth'
+import { auth } from './utils/firebase/firebase'
 
 function App() {
+
+  const {handleSetUser} = useContext(AuthContext);
+  const [isLoading,setIsLoading]=useState(false);
+
+  useEffect(() => {
+    setIsLoading(true)
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        handleSetUser(user);
+      } else {
+        handleSetUser(null);
+      }
+      setIsLoading(false); 
+    });
+    return () => unsubscribe();
+  }, [ handleSetUser]);
+  
 
   return (
     <div className='app-div'>
@@ -22,6 +44,7 @@ function App() {
         <Route path='/offline-meet' element={<OfflineMeet/>} />
         </Route>
       </Routes>
+      {isLoading &&  <DataLoader />}
     </div>
   )
 }

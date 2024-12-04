@@ -1,0 +1,43 @@
+.meet-type-div{
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    h1{
+        font-size: 200%;
+    }
+    .main{
+        padding: 10px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        width: 75%;
+        // border: 1px solid;
+        .tile{
+            // border: 1px solid;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: -6px -6px 8px  var(--n-bs-clr1),3px 3px 20px  var(--n-bs-clr2);
+            padding: 10px 10px 20px;
+            border-radius: 7px;
+           cursor: pointer;
+            div{
+                // border: 1px solid;
+                width: 100%;
+                flex: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                img{
+                    width: 85%;
+                }
+            }
+            span{
+                font-size: 150%;
+                text-align: center;
+            }
+        }
+    }
+}

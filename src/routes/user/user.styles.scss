@@ -1,0 +1,95 @@
+.user-div{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+    .no-user{
+        display: flex;
+        box-shadow: -6px -6px 8px  var(--n-bs-clr1),3px 3px 20px  var(--n-bs-clr2);
+        border-radius: 5px;
+        transition: .25s ease;
+        .divider{
+            box-shadow: 6px 6px 5px var(--n-bs-clr2);
+            padding: 3px;
+        }
+        .google-signin{
+            width: 40%;
+            justify-content: center;
+            .btn-group{
+                display: flex;
+                gap: 20px;
+                div{
+                    padding: 10px;
+                    box-shadow:inset 4px 4px 8px var(--n-bs-clr4),2px 2px 4px var(--n-bs-clr3);
+                    border-radius: 5px;
+                    border: 3px solid var(--n-bs-clr2);
+                    cursor: pointer;
+                    &:active{
+                        box-shadow:inset 2px 2px 8px var(--n-bs-clr3),2px 2px 6px var(--n-bs-clr4);
+                    }
+                    svg{
+                        font-size: 190%;
+                    }
+                }
+            }
+        }
+        .email-signin{
+            gap: 10px;
+            flex: 1;
+            .signup{
+                gap: 30px;
+            }
+            .signin{
+               gap: 40px;
+            }
+        }
+    }
+}
+.google-signin,.inner-block,.signin,.signup{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.user-div .entry{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    div{
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        // border: 1px solid;
+        svg{
+            // border: 1px solid;
+            font-size: 130%;
+        }
+    }
+}
+.user-div .inner-block{
+    padding: 30px;
+    gap: 40px;
+    .switch{
+        padding: 5px;
+        display: flex;
+        border-radius: 25px;
+        cursor: pointer;
+        box-shadow:inset 4px 4px 8px var(--n-bs-clr1),2px 2px 4px var(--n-bs-clr2);
+        div{
+            padding: 10px;
+            border-radius: 25px;
+        }
+    }
+    h2{
+        font-size: 190%;
+    }
+}
+.google-signin .inner-block{
+    gap: 30px;
+    span{
+        font-size: 90%;
+        text-align: center;
+    }
+}
+.facebook{
+    color: rgb(58, 134, 249);
+}

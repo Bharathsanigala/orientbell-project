@@ -1,0 +1,118 @@
+
+.navbar-container{
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    margin-bottom: 10px;
+    div{
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: 0.1s ease;
+        p{
+            font-size: 1.3rem;
+        }
+        &:hover{
+            cursor: pointer;
+        }
+    }
+    .nav-img-div{
+        img{
+            width: 35px;
+            height: 30px;
+        }
+        // background-color: var(--nav-bar-clr);
+        // background: #e8e8e8;
+        // box-shadow: 6px 6px 12px #d6d6d6, -6px -6px 12px #ffffff;
+        // border-radius: 7px;
+        // padding: 10px;
+    }
+    .nav-ul{
+        // background-color: var(--nav-bar-clr);
+        // border-radius: 7px;
+        // padding: 0px 10px;
+    }
+    .options-div{
+        position: absolute;
+        right: 10px;
+        border-radius: 5px;
+        top: 50px;
+        display: flex;
+        flex-direction: column;
+        background-color: var(--dd-bg);
+        color:var(--text-color);
+        padding: 10px 0;
+        z-index: 3;
+        box-shadow: var(--dd-bs);
+
+        span{
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            width: 100%;
+            font-size: 1.2rem;
+            &:hover{
+                background-color: var(--dd-bgh);
+            }
+        }
+    }
+
+    ul{
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        .theme,.user,.options {
+            display: flex;
+            align-items: center;
+            justify-content:center ;
+        }
+        .options{
+            display: none;
+        }
+    }
+
+    ul li{
+        list-style-type: none;
+        font-size: 1.1rem;
+        position: relative;
+        padding: 6px;
+        &::after{
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 5%;
+            width: 93%;
+            display: block;
+            height: 2px;
+            background-color: var(--text-color);
+            border-radius: 5px;
+            transform: scaleX(0);
+            transition: .2s ease;
+            transform-origin: left;
+        }
+        &:hover::after{
+            transform: scaleX(1);
+        }
+        &:hover{
+            cursor: pointer;
+        }
+    }
+}
+@media screen and (max-width:500px){
+    .navbar-container{
+        div{
+            p{
+                display: none;
+            }
+        }
+        ul{
+            .nav-li{
+                display: none;
+            }
+            .options{
+                display: flex;
+            }
+        }
+    }
+}

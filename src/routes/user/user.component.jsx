@@ -31,15 +31,15 @@ const User = () => {
     return ( 
         <div className='user-div '>
         <h1>User Space</h1>
-            {!user ? <div className='no-user '>
+            {!user ? <div className='no-user main-box-shadow'>
                 <div className='google-signin'>
                     <div className='inner-block'>
                     <h2>Welcome Back !</h2>
                     <span>To keep connected with us please login with your personal info</span>
                     <div className='btn-group'>
-                        <div onClick={signInWithGooglePopup}><FcGoogle/></div>
-                        <div className='facebook'><FaFacebookSquare /></div>
-                        <div><FaGithub/></div>
+                        <div onClick={signInWithGooglePopup} className='button-box-shadow'><FcGoogle/></div>
+                        <div className='facebook button-box-shadow'><FaFacebookSquare /></div>
+                        <div className='button-box-shadow'><FaGithub/></div>
                     </div>
                     </div>
                 </div>
@@ -56,15 +56,15 @@ const User = () => {
                         <div className='entry'>
                         <div>
                         <FaUserAlt/>
-                            <input placeholder='Name' type='text' className='n-input' value={enteredName} onChange={(e)=>setEnteredName(e.target.value)} />
+                            <input placeholder='Name' maxLength={50} type='text' className='n-input' value={enteredName} onChange={(e)=>setEnteredName(e.target.value)} />
                         </div>
                             <div>
                         <MdEmail/>
-                            <input placeholder='Email' type='email' className='n-input' value={createEmail} onChange={(e)=>setCreateEmail(e.target.value)} />
+                            <input placeholder='Email' maxLength={50} type='email' className='n-input' value={createEmail} onChange={(e)=>setCreateEmail(e.target.value)} />
                         </div>
                             <div>
                                 <FaLock/>
-                                <input placeholder='Password' type={!isEyeClicked ? 'password' : 'text'} className='n-input' value={createPassword} onChange={(e)=>setCreatePassword(e.target.value)} />
+                                <input placeholder='Password' maxLength={40} type={!isEyeClicked ? 'password' : 'text'} className='n-input' value={createPassword} onChange={(e)=>setCreatePassword(e.target.value)} />
                                 {!isEyeClicked ? <FaEye onClick={()=>setIsEyeClicked(true)} /> : <FaEyeSlash onClick={()=>setIsEyeClicked(false)} />}
                             </div>
                         </div>
@@ -84,11 +84,11 @@ const User = () => {
                         <div className='entry'>
                         <div>
                         <MdEmail/>
-                            <input placeholder='Email' type='email' className='n-input' value={signinEmail} onChange={(e)=>setSigninEmail(e.target.value)} />
+                            <input placeholder='Email' maxLength={50} type='email' className='n-input' value={signinEmail} onChange={(e)=>setSigninEmail(e.target.value)} />
                         </div>
                             <div>
                                 <FaLock/>
-                                <input placeholder='Password' type={!isEyeClicked ? 'password' : 'text'} className='n-input' value={signinPassword} onChange={(e)=>setSigninPassword(e.target.value)} />
+                                <input placeholder='Password' maxLength={40} type={!isEyeClicked ? 'password' : 'text'} className='n-input' value={signinPassword} onChange={(e)=>setSigninPassword(e.target.value)} />
                                 {!isEyeClicked ? <FaEye onClick={()=>setIsEyeClicked(true)} /> : <FaEyeSlash onClick={()=>setIsEyeClicked(false)} />}
                             </div>
                         </div>

@@ -5,7 +5,6 @@
     align-items: center;
     .no-user{
         display: flex;
-        box-shadow: -6px -6px 8px  var(--n-bs-clr1),3px 3px 20px  var(--n-bs-clr2);
         border-radius: 5px;
         transition: .25s ease;
         .divider{
@@ -20,13 +19,9 @@
                 gap: 20px;
                 div{
                     padding: 10px;
-                    box-shadow:inset 4px 4px 8px var(--n-bs-clr4),2px 2px 4px var(--n-bs-clr3);
                     border-radius: 5px;
                     border: 3px solid var(--n-bs-clr2);
                     cursor: pointer;
-                    &:active{
-                        box-shadow:inset 2px 2px 8px var(--n-bs-clr3),2px 2px 6px var(--n-bs-clr4);
-                    }
                     svg{
                         font-size: 190%;
                     }

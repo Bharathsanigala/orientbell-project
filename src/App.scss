@@ -11,23 +11,26 @@ html,body{
 }
 
 .light-theme{
+    --pure-clr:rgb(239, 239, 239);
     --bg-color:#e8e8e8;
     --text-color:#000;
     --n-bs-clr1:#c5c5c5;
     --n-bs-clr2:#fff;
     --n-bs-clr3:#c5c5c5;
     --n-bs-clr4:#fff;
+    --overlay-clr:rgba(0, 0, 0, 0.65);
 }
 
 
 .dark-theme{
-    --bg-color:#171717;
+    --pure-clr:rgb(34, 31, 31);
+    --bg-color:#1e1e1e;
     --text-color:#fff;
     --n-bs-clr1:#242424;
     --n-bs-clr2:#000;
     --n-bs-clr3:#000;
     --n-bs-clr4:#242424;
-
+    --overlay-clr:rgba(0, 0, 0, 0.65);
 }
 
 body{
@@ -44,7 +47,7 @@ body{
       bottom: 0;
       left: 0;
       right: 0;
-      background-color: rgba(0, 0, 0, 0.65);
+      background-color: var(--overlay-clr);
       display: flex;
       justify-content: center;
       z-index: 20;
@@ -81,4 +84,34 @@ body{
     outline: none;
     box-shadow:inset 4px 4px 8px var(--n-bs-clr1),2px 2px 4px var(--n-bs-clr2);
     font-size: 1.1rem;
+}
+.main-box-shadow{
+    box-shadow: -6px -6px 8px  var(--n-bs-clr1),3px 3px 20px  var(--n-bs-clr2);
+}
+.button-box-shadow{
+    box-shadow:inset 4px 4px 8px var(--n-bs-clr4),2px 2px 4px var(--n-bs-clr3);
+    border-radius: 5px;
+    cursor: pointer;
+    &:active{
+        box-shadow:inset 2px 2px 8px var(--n-bs-clr3),2px 2px 6px var(--n-bs-clr4);
+    }
+}
+.close-mark{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    svg{
+        color: rgb(215, 28, 28);
+        font-size: 110%;
+        cursor: pointer;
+    }
+}
+.btn-group{
+    display: flex;
+    width: 90%;
+    justify-content: space-between;
+    div{
+        font-size: 120%;
+        padding: 10px;
+    }
 }

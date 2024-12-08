@@ -1,3 +1,51 @@
 .search-users-div{
     // border: 1px solid;
+    .container{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        .avatar{
+            padding: 5px 10px;
+            border-radius: 5px;
+            svg{
+                font-size: 600%;
+            }
+        }
+        .btn{
+            font-size: 120%;
+            padding: 7px;
+        }
+        .main{
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+            padding: 10px;
+            div{
+                width: 100%;
+                span{
+                    margin-left: 4px;
+                }
+                p{
+                    box-shadow:inset 2px 2px 8px var(--n-bs-clr3),2px 2px 6px var(--n-bs-clr4);
+                    padding: 10px;
+                    border-radius: 5px;
+                }
+            }
+        }
+        .btn-wrapper{
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            div{
+                padding: 10px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 120%;
+                gap: 10px;
+            }
+        }
+    }
 }

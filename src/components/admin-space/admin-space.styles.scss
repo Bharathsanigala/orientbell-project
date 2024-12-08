@@ -17,6 +17,10 @@
                 font-size: 110%;
                 min-width: 150px;
                 text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 5px;
             }
         }
         .main{

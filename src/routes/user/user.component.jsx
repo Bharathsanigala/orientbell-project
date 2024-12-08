@@ -16,7 +16,7 @@ import { AuthContext } from '../../contexts/auth-context.context';
 const User = () => {
 
     const [isSignUpClicked,setIsSignUpClicked]=useState(false);
-    const [signinEmail,setSigninEmail]=useState('');
+    const [signinEmail,setSigninEmail]=useState(localStorage.getItem('cacheEmail') ?? '');
     const [signinPassword,setSigninPassword]=useState('');
     const [createEmail,setCreateEmail]=useState('');
     const [createPassword,setCreatePassword]=useState('')
@@ -26,7 +26,6 @@ const User = () => {
     const {user} = useContext(AuthContext);
     const [isEyeClicked,setIsEyeClicked]=useState(false);
     const responseMessageArray=['','Successfully Signed In','Email Already Registered','Unknown Error Occured','Invalid credential Try Again.']
-    
 
     return ( 
         <div className='user-div '>

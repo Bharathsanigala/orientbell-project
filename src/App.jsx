@@ -8,14 +8,19 @@ import MyMeetings from './routes/my-meetings/my-meetings.component'
 import OnlineMeet from './routes/online-meet/online-meet.component'
 import OfflineMeet from './routes/offline-meet/offline-meet.component'
 import DataLoader from './components/data-loader/data-loader.component'
-import { AuthContext } from './contexts/auth-context.context'
-import { useContext,useState,useEffect } from 'react'
+import { useState,useEffect } from 'react'
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from './utils/firebase/firebase'
+import BookOfflineMeet from './routes/book-offline-meet/book-offline-meet.component'
+import { useAuthContext } from './contexts/auth-context.context'
+import ProtectedRoute from './routes/protected-route/protected-route.component'
+import UserRequests from './routes/user-requests/user-requests.component'
+import SearchUsers from './routes/search-users/search-users.component'
+import AdminSettings from './routes/admin-settings/admin-settings.component'
 
 function App() {
 
-  const {handleSetUser} = useContext(AuthContext);
+  const {handleSetUser} = useAuthContext();
   const [isLoading,setIsLoading]=useState(false);
 
   useEffect(() => {
@@ -42,6 +47,12 @@ function App() {
         <Route path='/my-meetings' element={<MyMeetings/>} />
         <Route path='/online-meet' element={<OnlineMeet/>} />
         <Route path='/offline-meet' element={<OfflineMeet/>} />
+        <Route path='/book-offline-meet/:offlineMeetNameId' element={<BookOfflineMeet/>} />
+        <Route element={<ProtectedRoute/>} path='/admin-space'  >
+          <Route path='/admin-space/search-users' element={<SearchUsers/>} />
+          <Route path='/admin-space/user-requests' element={<UserRequests/>} />
+          <Route path='/admin-space/admin-settings' element={<AdminSettings/>} />
+        </Route>
         </Route>
       </Routes>
       {isLoading &&  <DataLoader />}

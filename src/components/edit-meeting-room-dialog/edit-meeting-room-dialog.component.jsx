@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import './edit-meeting-room-dialog.styles.scss'
 import PropTypes from 'prop-types';
-import { FaXmark } from "react-icons/fa6";
 
 const EditMeetingRoomDialog = ({roomName,roomLocation,roomCapacity,setIsEditMeetingDialogOpen}) => {
 
@@ -13,7 +12,6 @@ const EditMeetingRoomDialog = ({roomName,roomLocation,roomCapacity,setIsEditMeet
         <div className='overlaying'>
         <div className='div-placement '>
             <div className='edit-meeting-room-dialog-div '>
-            <div className='close-mark'> <FaXmark onClick={()=>setIsEditMeetingDialogOpen(false)} /></div>
                 <h3>Editor</h3>
                 <div className='input-group'>
                     <div>

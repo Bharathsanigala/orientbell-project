@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { BsFillPeopleFill } from "react-icons/bs";
 import { FaAudioDescription,FaBoxOpen } from "react-icons/fa";
-import { FaPlus,FaCheck,FaTrash,FaLocationDot,FaXmark } from 'react-icons/fa6';
+import { FaPlus,FaCheck,FaTrash,FaLocationDot } from 'react-icons/fa6';
 
 
 const AddMeetingRoomDialog = ({setIsAddMeetingDialogOpen}) => {
@@ -18,7 +18,6 @@ const AddMeetingRoomDialog = ({setIsAddMeetingDialogOpen}) => {
     return ( 
         <div className='overlaying'>
         <div className='add-meeting-room-dialog-div'>
-        <div className='close-mark'> <FaXmark onClick={()=>setIsAddMeetingDialogOpen(false)} /></div>
         <h3>Add meeting room</h3>
         <div className='input-group'>
                     <div>

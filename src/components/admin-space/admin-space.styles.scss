@@ -1,0 +1,33 @@
+.admin-space-div{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    .container{
+        width: 99%;
+        .nav{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 5px 15px;
+            gap: 20px;
+            div{
+                padding: 10px;
+                font-size: 110%;
+                min-width: 150px;
+                text-align: center;
+            }
+        }
+        .main{
+            margin-top: 30px;
+        }
+    }
+}
+.adm-div{
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}

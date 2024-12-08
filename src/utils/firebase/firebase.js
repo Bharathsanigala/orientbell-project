@@ -1,8 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth,GoogleAuthProvider,signInWithPopup,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,deleteUser } from "firebase/auth";
 import { getDatabase } from "firebase/database";
-import { getFirestore } from "firebase/firestore";
-import { doc,getDoc,setDoc } from "firebase/firestore";
+import { getFirestore,doc,getDoc,setDoc } from "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: "AIzaSyBA4eM74s5GrhD-IOgu5ZboejV9Kx23ExE",
@@ -46,6 +45,7 @@ export const createUserFromEmailAndPassword =async(email,password,name)=>{
             email:email,
             name:name,
         })
+        localStorage.setItem('cacheEmail',email)
         return 1;
     }catch(e){
         if (e.code === 'auth/email-already-in-use') {
@@ -67,7 +67,10 @@ export const createUserFromEmailAndPassword =async(email,password,name)=>{
 
 export const signInUserWithEmailAndPassword =async(email,password)=>{
     try{
-        const result = await signInWithEmailAndPassword(auth,email,password);
+        await signInWithEmailAndPassword(auth,email,password);
+        if(localStorage.getItem('cacheEmail') !== email){
+            localStorage.setItem('cacheEmail',email);
+        }
         return 1;
     }catch(e){
         if(e.code ==='auth/invalid-credential'){

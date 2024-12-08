@@ -1,0 +1,43 @@
+.confirm-meeting-dialog-div{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: var(--pure-clr);
+    align-items: center;
+    padding: 20px;
+    border-radius: 7px;
+    max-width: 350px;
+    h4{
+        font-size: 120%;
+    }
+    .avatar{
+        svg{
+            font-size: 230%;
+        }
+    }
+    .content{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 5px 4px;
+        div{
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            p{
+                box-shadow:inset 2px 2px 8px var(--n-bs-clr3),2px 2px 6px var(--n-bs-clr4);
+                padding: 5px 10px;
+                border-radius: 5px;
+                font-size: 130%;
+            }
+        }
+    }
+    .btn-wrapper{
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        div{
+            padding: 10px;
+        }
+    }
+}

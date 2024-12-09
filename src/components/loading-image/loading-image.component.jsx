@@ -16,6 +16,6 @@ const LoadingImage = ({imgSrc,imgWidth}) => {
 }
 LoadingImage.propTypes={
     imgSrc:PropTypes.string,
-    imgWidth:PropTypes.number,
+    imgWidth:PropTypes.string,
 }
 export default LoadingImage;

@@ -118,3 +118,25 @@ body{
 .text-center{
     text-align: center;
 }
+.db-error-class{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    margin-top: 200px;
+    span{
+        text-align: center;
+        font-size: 120%;
+    }
+}
+
+.loader-class{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    margin-top: 200px;
+    p{
+        font-size: 130%;
+    }
+}

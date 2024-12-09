@@ -2,10 +2,12 @@ import './confirm-meeting-dialog.styles.scss';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { FaRegCalendarCheck } from "react-icons/fa6";
+import { useUserRoleContext } from '../../contexts/user-role.context';
 
 const ConfirmMeetingDialog = ({currentSlot,meetingRoomName,currentDate,setIsConfirmMeetingDialogOpen}) => {
 
     const [addMail,setAddMail]=useState('');
+    const {fetchedUserRoleData}=useUserRoleContext();
 
     return ( 
         <div className='overlaying'>
@@ -28,10 +30,10 @@ const ConfirmMeetingDialog = ({currentSlot,meetingRoomName,currentDate,setIsConf
                 <span>date & day</span>
                 <p>{currentDate.split('-')[0]} & {currentDate.split('-')[1]} </p>
                 </div>
-                <div>
+                {fetchedUserRoleData?.fetchedUserRole === 'admin' && <div>
                 <span>email</span>
                 <input className='n-input' value={addMail} onChange={(e)=>setAddMail(e.target.value)} />
-                </div>
+                </div>}
             </div>
             <div className='btn-wrapper'>
                 <div onClick={()=>setIsConfirmMeetingDialogOpen(false)}className='button-box-shadow'>cancel</div>

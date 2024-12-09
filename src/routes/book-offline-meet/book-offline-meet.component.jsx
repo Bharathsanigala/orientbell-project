@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
 import './book-offline-meet.styles.scss';
 import { useParams } from 'react-router-dom';
-// import Avatar from 'boring-avatars';
 import { generateMonthCalendar,monthArray,dayArray } from '../../helpers/helpers';
-import { FaCircleChevronRight } from "react-icons/fa6";
-import { FaCircleChevronLeft } from "react-icons/fa6";
+import { FaCircleChevronRight,FaCircleChevronLeft } from "react-icons/fa6";
 import ConfirmMeetingDialog from '../../components/confirm-meeting-dialog/confirm-meeting-dialog.component';
 import CheckBookingDialog from '../../components/check-booking-dialog/check-booking-dialog.component';
 import { FaLocationDot } from "react-icons/fa6";
@@ -12,6 +10,7 @@ import { SiGoogleclassroom } from "react-icons/si";
 import { BsFillPeopleFill } from "react-icons/bs";
 import { FaBoxOpen } from "react-icons/fa";
 import { BiSolidBookContent } from "react-icons/bi";
+import Loader from '../../components/loader/loader.component';
 
 const BookOfflineMeet = () => {
 

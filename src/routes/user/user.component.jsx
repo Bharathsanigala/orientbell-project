@@ -1,17 +1,12 @@
 import { Fragment,  useState } from 'react';
 import { FcGoogle } from "react-icons/fc";
-import { FaFacebookSquare } from "react-icons/fa";
-import { FaGithub } from "react-icons/fa6";
-import { FaLock } from "react-icons/fa6";
+import { FaLock,FaGithub } from "react-icons/fa6";
 import { MdEmail } from "react-icons/md";
-import { FaUserAlt } from "react-icons/fa";
-import 'animate.css'
 import './user.styles.scss'
-import { FaEye,FaEyeSlash } from "react-icons/fa";
+import { FaEye,FaEyeSlash,FaUserAlt,FaFacebookSquare } from "react-icons/fa";
 import { signInWithGooglePopup,signInUserWithEmailAndPassword,createUserFromEmailAndPassword } from '../../utils/firebase/firebase';
 import AuthUser from '../../components/auth-user/auth-user.component';
-import { useContext } from 'react';
-import { AuthContext } from '../../contexts/auth-context.context';
+import { useAuthContext } from '../../contexts/auth-context.context';
 
 const User = () => {
 
@@ -23,7 +18,7 @@ const User = () => {
     const [enteredName,setEnteredName]=useState('');
     const [responseMessageId,setResponseMessageId]=useState(0);
     const [signInResponseId,setSignInResponseId]=useState(0);
-    const {user} = useContext(AuthContext);
+    const {user} = useAuthContext()
     const [isEyeClicked,setIsEyeClicked]=useState(false);
     const responseMessageArray=['','Successfully Signed In','Email Already Registered','Unknown Error Occured','Invalid credential Try Again.']
 

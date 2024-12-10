@@ -5,7 +5,7 @@ import { FaPen,FaTrash,FaPlus,FaLocationDot } from "react-icons/fa6";
 import EditMeetingRoomDialog from '../../components/edit-meeting-room-dialog/edit-meeting-room-dialog.component';
 import DeleteMeetingRoomDialog from '../../components/delete-meeting-room-dialog/delete-meeting-room-dialog.component';
 import AddMeetingRoomDialog from '../../components/add-meeting-room-dialog/add-meeting-room-dialog.component';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SearchBar from '../../components/search-bar/search-bar.component';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../../components/loader/loader.component';
@@ -14,11 +14,11 @@ import EmptyMeetingRoomsImg from '../../assets/empty.svg';
 import {useAuthContext} from '../../contexts/auth-context.context';
 import NoAuthDialog from '../../components/no-auth-dialog/no-auth-dialog.component';
 import { useUserRoleContext } from '../../contexts/user-role.context';
+import { useMeetingRoomsContext } from '../../contexts/meeting-rooms.context';
 
 
 const OfflineMeet = () => {
 
-    const mockArray = [{key:1,meetingRoomName:'test meeting room 1',capacity:50,location:'top floor east wing 12'},{key:2,meetingRoomName:'test meeting room 2',capacity:50,location:'top floor east wing 21'},{key:3,meetingRoomName:'new meeting room 1',capacity:50,location:'top floor east wing 112'},{key:4,meetingRoomName:'test meeting room 1',capacity:50,location:'top floor east wing 22'}]
     const {user}=useAuthContext();
     const [isEditMeetingDialogOpen,setIsEditMeetingDialogOpen]=useState(false);
     const [isDeleteMeetingDialogOpen,setIsDeleteMeetingDialogOpen]=useState(false);
@@ -26,17 +26,20 @@ const OfflineMeet = () => {
     const [roomName,setRoomName]=useState('');
     const [roomLocation,setRoomLocation]=useState('');
     const [roomCapacity,setRoomCapacity]=useState('');
-    const [filteredMeetingRoomData,setFilteredMeetingRoomData]=useState(mockArray);
     const navigateRouter = useNavigate();
-    const [offlineMeetingsArray,setOfflineMeetingsArray]=useState([2]);
-    const [isDbErrorOccured,setIsDbErrorOccured]=useState(false);
+    const [roomId,setRoomId]=useState('');
+    const [roomItems,setRoomItems]=useState([]);
     const [isNoAuthDialogOpen,setIsNoAuthDialogOpen]=useState(false);
-    const [isLoading,setIsLoading]=useState(false);
     const {fetchedUserRoleData}=useUserRoleContext();
-
+    const {offlineMeetingsArray,isMeetingRoomsLoading,isDbErrorOccured}=useMeetingRoomsContext();
+    const [filteredMeetingRoomData,setFilteredMeetingRoomData]=useState(offlineMeetingsArray);
+    
+    useEffect(()=>{
+        setFilteredMeetingRoomData(offlineMeetingsArray)
+    },[offlineMeetingsArray])
 
     const handleFilterData=(val)=>{
-        setFilteredMeetingRoomData(mockArray.filter(obj=>obj.meetingRoomName?.toLowerCase()?.includes(val.toLowerCase())))
+        setFilteredMeetingRoomData(offlineMeetingsArray.filter(obj=>obj.meetingRoomName?.toLowerCase()?.startsWith(val.toLowerCase())))
     }
 
     if(isDbErrorOccured){
@@ -46,14 +49,7 @@ const OfflineMeet = () => {
         </div>
     }
 
-    if(!offlineMeetingsArray.length){
-        return <div className='db-error-class'>
-            <img src={EmptyMeetingRoomsImg} />
-            <span>No meetings available yet! contact admin.</span>
-        </div>
-    }
-
-    if(isLoading){
+    if(isMeetingRoomsLoading){
         return <div className='loader-class'>
             <Loader lh={'100px'} lw={'100px'} />
             <p>loading meeting rooms</p>
@@ -64,10 +60,10 @@ const OfflineMeet = () => {
         <div className="offline-meet-div">
             <h1>Offline Meetings</h1>
             <div className='search-bar-container'>
-            <SearchBar handleFilterData={handleFilterData} />
+            {offlineMeetingsArray.length>0 && <SearchBar handleFilterData={handleFilterData} />}
             {fetchedUserRoleData?.fetchedUserRole === 'admin' && <div className='adm-add-meet button-box-shadow' onClick={()=>setIsAddMeetingDialogOpen(true)}> <FaPlus/></div>}
             </div>
-            <div className='container'>
+            {offlineMeetingsArray.length ? <div className='container'>
                 {filteredMeetingRoomData.map(obj=>{
                     return <div className='tile main-box-shadow' key={obj.key}>
                         <div className='avatar-container'>
@@ -85,6 +81,7 @@ const OfflineMeet = () => {
                         {fetchedUserRoleData?.fetchedUserRole === 'admin' && <div className='admin-options '>
                             <div className='button-box-shadow' onClick={()=>{
                               setRoomName(obj.meetingRoomName)
+                              setRoomId(obj.key)
                               setIsDeleteMeetingDialogOpen(true)  
                             }} >
                             <FaTrash />
@@ -93,6 +90,8 @@ const OfflineMeet = () => {
                                 setRoomName(obj.meetingRoomName)
                                 setRoomLocation(obj.location)
                                 setRoomCapacity(obj.capacity)
+                                setRoomId(obj.key)
+                                setRoomItems(obj.itemArray)
                                 setIsEditMeetingDialogOpen(true)
                             }}>
                             <FaPen />
@@ -100,9 +99,12 @@ const OfflineMeet = () => {
                          </div>}
                     </div>
                 })}
-            </div>
-            { isEditMeetingDialogOpen && <EditMeetingRoomDialog roomName={roomName} roomCapacity={roomCapacity} roomLocation={roomLocation}  setIsEditMeetingDialogOpen={setIsEditMeetingDialogOpen} />}
-            {isDeleteMeetingDialogOpen && <DeleteMeetingRoomDialog roomName={roomName} setIsDeleteMeetingDialogOpen={setIsDeleteMeetingDialogOpen} />}
+            </div> : <div className='db-error-class'>
+            <img src={EmptyMeetingRoomsImg} />
+            <span>No meetings available yet! contact admin.</span>
+            </div>}
+            { isEditMeetingDialogOpen && <EditMeetingRoomDialog roomName={roomName} roomCapacity={roomCapacity} roomLocation={roomLocation}  setIsEditMeetingDialogOpen={setIsEditMeetingDialogOpen} roomId={roomId} roomItems={roomItems} />}
+            {isDeleteMeetingDialogOpen && <DeleteMeetingRoomDialog roomName={roomName} setIsDeleteMeetingDialogOpen={setIsDeleteMeetingDialogOpen} roomId={roomId} />}
             {isAddMeetingDialogOpen && <AddMeetingRoomDialog setIsAddMeetingDialogOpen={setIsAddMeetingDialogOpen} />}
             {isNoAuthDialogOpen && <NoAuthDialog setIsNoAuthDialogOpen={setIsNoAuthDialogOpen} />}
         </div>

@@ -1,11 +1,45 @@
 import './delete-meeting-room-dialog.styles.scss';
 import { SiGoogleclassroom } from "react-icons/si";
 import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { ref, remove } from 'firebase/database';
+import { realtimeDatabase } from '../../utils/firebase/firebase';
 
-const DeleteMeetingRoomDialog = ({setIsDeleteMeetingDialogOpen,roomName}) => {
+const DeleteMeetingRoomDialog = ({setIsDeleteMeetingDialogOpen,roomName,roomId}) => {
+
+    const [animationClass,setAnimationClass]=useState('slideInDown')
+
+    const handleDialogClose=(bool)=>{
+        if(bool){
+            handleMeetingRoomDelete()
+        }else{
+            closeHandler()
+        }
+    }
+
+    const closeHandler=()=>{
+        setAnimationClass('fadeOutDown');
+        setTimeout(()=>{
+            setIsDeleteMeetingDialogOpen(false)
+        },600)
+    }
+
+    const handleMeetingRoomDelete=async ()=>{
+        if(roomId){
+            try{
+                const offlineMeetigRoomsDataRef = ref(realtimeDatabase,`offlineMeetingRoomsData/${roomId}`)
+                await remove(offlineMeetigRoomsDataRef)
+                closeHandler()
+            }catch(e){
+                console.error('error deleting meeting room from db',e)
+                alert('Failed to delete meeting room. Please try again.')
+            }
+        }
+    }
+
     return ( 
         <div className='overlaying'>
-        <div className='delete-meeting-room-dialog-div'>
+        <div className={`delete-meeting-room-dialog-div animate__animated animate__${animationClass}`}>
             <h3>Remover</h3>
             <div className='d-img'>
             <SiGoogleclassroom/>
@@ -13,8 +47,8 @@ const DeleteMeetingRoomDialog = ({setIsDeleteMeetingDialogOpen,roomName}) => {
             <span>{roomName}</span>
             <span className='note'>**All booked meetings will be deleted**</span>
             <div className='btn-group'>
-                <div className='button-box-shadow' onClick={()=>setIsDeleteMeetingDialogOpen(false)}>cancel</div>
-                <div className='button-box-shadow'>remove</div>
+                <div className='button-box-shadow' onClick={()=>handleDialogClose(false)}>cancel</div>
+                <div className='button-box-shadow' onClick={()=>handleDialogClose(true)}>remove</div>
             </div>
         </div>
         </div>
@@ -23,5 +57,6 @@ const DeleteMeetingRoomDialog = ({setIsDeleteMeetingDialogOpen,roomName}) => {
 DeleteMeetingRoomDialog.propTypes={
     setIsDeleteMeetingDialogOpen:PropTypes.func,
     roomName:PropTypes.string,
+    roomId:PropTypes.string,
 }
 export default DeleteMeetingRoomDialog;

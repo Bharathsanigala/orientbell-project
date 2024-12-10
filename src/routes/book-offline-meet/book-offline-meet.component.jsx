@@ -11,26 +11,33 @@ import { BsFillPeopleFill } from "react-icons/bs";
 import { FaBoxOpen } from "react-icons/fa";
 import { BiSolidBookContent } from "react-icons/bi";
 import Loader from '../../components/loader/loader.component';
+import { useMeetingRoomsContext } from '../../contexts/meeting-rooms.context';
 
 const BookOfflineMeet = () => {
 
     const {offlineMeetNameId}=useParams();
     const slotNamesArray =  ['9:00 AM - 11:00 AM','11:00 AM - 01:00 PM','03:00 PM - 05:00 PM','05:00 PM - 07:00 PM']
-    const meetingRoomName = offlineMeetNameId.split('^-^')[0]
+    const roomName = offlineMeetNameId.split('^-^')[0]
     const [currentMonth,setCurrentMonth]=useState(new Date().getMonth() +1);
     const [currentYear,setCurrentYear]=useState(new Date().getFullYear());
-    // const meetingRoomId = offlineMeetNameId.split('^-^')[1]
+    const meetingRoomId = offlineMeetNameId.split('^-^')[1]
     const [currentSlot,setCurrentSlot]=useState('9:00 AM - 11:00 AM');
     const [calenderData,setCalenderData]=useState([]);
     const [calStepCount,setCalStepCount]=useState(0);
     const [isConfirmMeetingDialogOpen,setIsConfirmMeetingDialogOpen]=useState(false);
     const [currentDate,setCurrentDate]=useState('');
     const [isCheckBookingDialogOpen,setIsCheckBookingDialogOpen]=useState(false);
-
+    const {offlineMeetingsArray}=useMeetingRoomsContext();
+    const [currentMeetingRoom,setCurrentMeetingRoom]=useState({});
+    
+    useEffect(()=>{
+        setCurrentMeetingRoom(offlineMeetingsArray.filter(obj=>obj.meetingRoomName === roomName))
+    },[offlineMeetingsArray,roomName])
+    
     const handleSlotClick=(slot)=>{
         setCurrentSlot(slot)
     }
-
+    
     const handleMonthChange = (increment) => {
         setCalStepCount((prev) => (increment ? prev + 1 : prev - 1));
         setCurrentMonth((prevMonth) => {
@@ -56,7 +63,7 @@ const BookOfflineMeet = () => {
 
     return ( 
         <div className='book-offline-meet-div'>
-            <h1>{meetingRoomName}</h1>
+            <h1>{roomName}</h1>
             <div className='slots-div'>
             {slotNamesArray.map((slotName,index)=>{
                 return <div key={`slot-name-divs-${index}`} className='button-box-shadow' onClick={()=>handleSlotClick(slotName)} style={{boxShadow: currentSlot === slotName ? 'inset 2px 2px 8px var(--n-bs-clr3),2px 2px 6px var(--n-bs-clr4)' : 'inset 4px 4px 8px var(--n-bs-clr4),2px 2px 4px var(--n-bs-clr3)'}}>
@@ -95,18 +102,20 @@ const BookOfflineMeet = () => {
                         </div>
                         <div className='details'>
                             <div >
-                                <p> <FaLocationDot/> south east wing fllor 4 </p>
+                                <p> <FaLocationDot/> {currentMeetingRoom[0]?.location} </p>
                             </div>
                             <div >
-                                <p> <BsFillPeopleFill/> 60 members</p>
+                                <p> <BsFillPeopleFill/> {currentMeetingRoom[0]?.capacity} members</p>
                             </div>
                         </div>
                         <div className='contents'>
                             <div className='avatar'> <FaBoxOpen/> </div>
                             <div className='content'>
-                            <span> <BiSolidBookContent/> Ac</span>
-                            <span> <BiSolidBookContent/> white board</span>
-                            <span> <BiSolidBookContent/> other contents</span>
+                            {currentMeetingRoom[0]?.itemArray?.map((item,idx)=>{
+                                return <span key={`room-contents-${idx}`}>
+                                <BiSolidBookContent/> {item}
+                                </span>
+                            })}
                             </div>
                         </div>
                 </div>

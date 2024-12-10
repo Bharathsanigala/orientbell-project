@@ -2,8 +2,6 @@ import './search-bar.styles.scss';
 import PropTypes from 'prop-types';
 
 const SearchBar = ({handleFilterData}) => {
-
-
     return ( 
       <div className="search-bar-div">
   <button className="icon"> 

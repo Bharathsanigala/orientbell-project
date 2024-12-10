@@ -6,11 +6,13 @@
     align-items: center;
     padding: 20px;
     border-radius: 7px;
+    max-width: 350px;
     .d-img{
         font-size: 3rem;
     }
     span{
         font-size: 160%;
+        text-align: center;
     }
     .note{
         font-size: 99%;

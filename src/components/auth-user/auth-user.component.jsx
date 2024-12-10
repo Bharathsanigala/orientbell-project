@@ -6,11 +6,12 @@ import { FaCircleCheck,FaClock,FaUniversalAccess,FaUserAstronaut } from "react-i
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../contexts/auth-context.context';
 import { useUserRoleContext } from '../../contexts/user-role.context';
+import Loader from '../loader/loader.component';
 
 const AuthUser = () => {
 
     const {user}=useAuthContext();
-    const {fetchedUserRoleData}=useUserRoleContext();
+    const {fetchedUserRoleData,isRoleLoading}=useUserRoleContext();
     const [isUserImgLoaded,setIsUserImgLoaded]=useState(false);
     const [responseCode,setResponseCode]=useState(0);
     const readerMessages=['','Request sent','In progress']
@@ -22,7 +23,13 @@ const AuthUser = () => {
         img.onload=()=>setIsUserImgLoaded(true);
     },[user?.photoURL])
 
-
+    if(isRoleLoading){
+        return <div className='loader-class'>
+        <Loader lh={'100px'} lw={'100px'} />
+        <p>getting user role...</p>
+    </div>
+    }
+    
     return ( 
         <div className='auth-user-div'>
             {isUserImgLoaded ? <img src={user?.photoURL} alt='user' className='user-photo-img' width={100} /> : <div  className='astro-user' ><FaUserAstronaut/> </div>}

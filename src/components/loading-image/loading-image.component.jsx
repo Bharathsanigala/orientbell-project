@@ -10,7 +10,7 @@ const LoadingImage = ({imgSrc,imgWidth}) => {
     return ( 
         <div className='loading-image-div'>
             {!isImgLoaded && <Loader lh={'48px'} lw={'48px'} />}
-            <img src={imgSrc} width={imgWidth} onLoad={() => setIsImgLoaded(true)} style={{ display: isImgLoaded ? 'block' : 'none' }} />
+            <img src={imgSrc} width={imgWidth} onLoad={() => setIsImgLoaded(true)} style={{ display: isImgLoaded ? 'block' : 'none' }} />   
         </div>
      );
 }

@@ -35,7 +35,7 @@ const EditMeetingRoomDialog = ({roomName,roomLocation,roomCapacity,setIsEditMeet
         if(newRoomName !== roomName) updateObject['meetingRoomName']=newRoomName
         if(newRoomLocation !== roomLocation) updateObject['location']=newRoomLocation
         if(newRoomCapacity !== roomCapacity) updateObject['capacity']=newRoomCapacity
-        if(isArraysChanged()) updateObject['itemArray']=contentArray;
+        if(isArraysChanged()) updateObject['itemArray']=contentArray?.length ? contentArray : ['no items'];
         
         if(Object.keys(updateObject).length){
             try{

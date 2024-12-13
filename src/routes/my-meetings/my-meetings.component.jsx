@@ -1,8 +1,10 @@
 import './my-meetings.styles.scss';
 import myMeetingsImg from '../../assets/void.svg'
 import { SiGoogleclassroom } from "react-icons/si";
-import { FaTrash } from 'react-icons/fa6';
-
+import { FaRegSquareMinus } from "react-icons/fa6";
+import { useState } from 'react';
+import Loader from '../../components/loader/loader.component';
+import DbError from '../../components/db-error/db-error.component';
 
 const MyMeetings = () => {
 
@@ -12,11 +14,24 @@ const MyMeetings = () => {
         {meetingRoomName:'test meeting room at 1',meetingSlot:'9:00 AM - 11:00 AM',meetingDate:'12-10-24 & sunday',key:'1c',bookingTime:'Sun, 08 Dec 2024 06:47:21 GMT'},
         {meetingRoomName:'test meeting room at 1',meetingSlot:'9:00 AM - 11:00 AM',meetingDate:'12-10-24 & sunday',key:'1d',bookingTime:'Sun, 08 Dec 2024 06:47:21 GMT'},
     ]
+    const [isMymeetingsLoading,setIsMyMeetingsLoading]=useState(false);
+    const [isDbErrorOccured,setIsDbErrorOccured]=useState(false);
+
+    if(isDbErrorOccured){
+            return <DbError/>
+        }
+
+    if(isMymeetingsLoading){
+        return <div className='loader-class'>
+            <Loader lh={'100px'} lw={'100px'} />
+            <p>loading my meetings</p>
+        </div>
+    }
 
     return ( 
         <div className='my-meetings-div'>
             <h1>My Meetings</h1>
-            {!mockArray.length ? <div className='no-meetings'>
+            {!mockArray.length >0 ? <div className='no-meetings'>
                 <img src={myMeetingsImg} style={{width:'35%'}} />
             </div>:<div className='has-meetings'>
                     {mockArray.map(obj=>{
@@ -42,7 +57,7 @@ const MyMeetings = () => {
                                         <p>{obj.bookingTime.split('GMT')[0]}</p>
                                     </div>
                                 </div>
-                                <div className='button-box-shadow delete-meeting'><FaTrash/>Delete</div>
+                                <div className='button-box-shadow delete-meeting'><FaRegSquareMinus/>unenroll</div>
                         </div>
                     })}
             </div>}

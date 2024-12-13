@@ -9,12 +9,12 @@ import { useEffect, useState } from 'react';
 import SearchBar from '../../components/search-bar/search-bar.component';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../../components/loader/loader.component';
-import DbErrorImage from '../../assets/db-error.svg'
 import EmptyMeetingRoomsImg from '../../assets/empty.svg';
 import {useAuthContext} from '../../contexts/auth-context.context';
 import NoAuthDialog from '../../components/no-auth-dialog/no-auth-dialog.component';
 import { useUserRoleContext } from '../../contexts/user-role.context';
 import { useMeetingRoomsContext } from '../../contexts/meeting-rooms.context';
+import DbError from '../../components/db-error/db-error.component';
 
 
 const OfflineMeet = () => {
@@ -43,10 +43,7 @@ const OfflineMeet = () => {
     }
 
     if(isDbErrorOccured){
-        return <div className='db-error-class'>
-            <img src={DbErrorImage} />
-            <span>Error ocuured while fetching data! Try again later.</span>
-        </div>
+        return <DbError/>
     }
 
     if(isMeetingRoomsLoading){

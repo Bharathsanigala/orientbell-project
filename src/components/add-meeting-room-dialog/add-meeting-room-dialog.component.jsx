@@ -39,13 +39,14 @@ const AddMeetingRoomDialog = ({setIsAddMeetingDialogOpen}) => {
         const trimmedRoomLocation=newRoomLocation.trim()
         const trimmedRoomCapacity = newRoomCapacity.trim()
         if(trimmedRoomName && trimmedRoomLocation && trimmedRoomCapacity){
+            let itemArray = contentArray?.length ? contentArray :['no items']
             try{
                 const offlineMeetigRoomsDataRef = ref(realtimeDatabase,`offlineMeetingRoomsData`)
                 await push(offlineMeetigRoomsDataRef,{
                 meetingRoomName:trimmedRoomName,
                 location:trimmedRoomLocation,
                 capacity:trimmedRoomCapacity,
-                itemArray:contentArray
+                itemArray:itemArray
             })
             closeHandler()
             }catch(e){

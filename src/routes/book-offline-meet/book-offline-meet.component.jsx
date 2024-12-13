@@ -12,6 +12,7 @@ import { FaBoxOpen } from "react-icons/fa";
 import { BiSolidBookContent } from "react-icons/bi";
 import Loader from '../../components/loader/loader.component';
 import { useMeetingRoomsContext } from '../../contexts/meeting-rooms.context';
+import DbError from '../../components/db-error/db-error.component';
 
 const BookOfflineMeet = () => {
 
@@ -29,6 +30,7 @@ const BookOfflineMeet = () => {
     const [isCheckBookingDialogOpen,setIsCheckBookingDialogOpen]=useState(false);
     const {offlineMeetingsArray}=useMeetingRoomsContext();
     const [currentMeetingRoom,setCurrentMeetingRoom]=useState({});
+    const [isDbErrorOccured,setIsDbErrorOccured]=useState(false);
     
     useEffect(()=>{
         setCurrentMeetingRoom(offlineMeetingsArray.filter(obj=>obj.meetingRoomName === roomName))
@@ -60,13 +62,16 @@ const BookOfflineMeet = () => {
         setCalenderData(generateMonthCalendar(currentYear,currentMonth))
     },[currentMonth,currentYear])
 
+    if(isDbErrorOccured){
+        return <DbError/>
+    }
 
     return ( 
         <div className='book-offline-meet-div'>
             <h1>{roomName}</h1>
             <div className='slots-div'>
             {slotNamesArray.map((slotName,index)=>{
-                return <div key={`slot-name-divs-${index}`} className='button-box-shadow' onClick={()=>handleSlotClick(slotName)} style={{boxShadow: currentSlot === slotName ? 'inset 2px 2px 8px var(--n-bs-clr3),2px 2px 6px var(--n-bs-clr4)' : 'inset 4px 4px 8px var(--n-bs-clr4),2px 2px 4px var(--n-bs-clr3)'}}>
+                return <div key={`slot-name-divs-${index}`} style={{backgroundColor:currentSlot===slotName ?'rgb(72,139,255)':'',color:currentSlot===slotName ? 'ghostwhite':''}} onClick={()=>handleSlotClick(slotName)} >
                     <span>{`slot ${index+1}`}</span>
                     <span>{slotName}</span>
                 </div>

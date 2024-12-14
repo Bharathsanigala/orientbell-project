@@ -2,9 +2,11 @@ import './my-meetings.styles.scss';
 import myMeetingsImg from '../../assets/void.svg'
 import { SiGoogleclassroom } from "react-icons/si";
 import { FaRegSquareMinus } from "react-icons/fa6";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Loader from '../../components/loader/loader.component';
 import DbError from '../../components/db-error/db-error.component';
+import { onValue, ref } from 'firebase/database';
+import { realtimeDatabase } from '../../utils/firebase/firebase';
 
 const MyMeetings = () => {
 
@@ -27,6 +29,7 @@ const MyMeetings = () => {
             <p>loading my meetings</p>
         </div>
     }
+
 
     return ( 
         <div className='my-meetings-div'>

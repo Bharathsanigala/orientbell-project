@@ -1,0 +1,48 @@
+.meeting-room-details-div{
+    padding: 20px;
+    border-radius: 7px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    height: fit-content;
+    max-width: 350px;
+    min-width: 250px;
+    .avatar{
+        svg{
+            font-size: 250%;
+        }
+    }
+    .details{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        div{
+            p{
+                display: flex;
+                gap: 10px;
+                align-items: center;
+                font-size: 120%;
+            }
+        }
+    }
+    .contents{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+        .content{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            span{
+                display: flex;
+                gap: 6px;
+                font-size: 120%;
+                align-items: center;
+            }
+        }
+    }
+}

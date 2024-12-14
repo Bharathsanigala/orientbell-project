@@ -5,19 +5,15 @@ import { generateMonthCalendar,monthArray,dayArray } from '../../helpers/helpers
 import { FaCircleChevronRight,FaCircleChevronLeft } from "react-icons/fa6";
 import ConfirmMeetingDialog from '../../components/confirm-meeting-dialog/confirm-meeting-dialog.component';
 import CheckBookingDialog from '../../components/check-booking-dialog/check-booking-dialog.component';
-import { FaLocationDot } from "react-icons/fa6";
-import { SiGoogleclassroom } from "react-icons/si";
-import { BsFillPeopleFill } from "react-icons/bs";
-import { FaBoxOpen } from "react-icons/fa";
-import { BiSolidBookContent } from "react-icons/bi";
 import Loader from '../../components/loader/loader.component';
 import { useMeetingRoomsContext } from '../../contexts/meeting-rooms.context';
 import DbError from '../../components/db-error/db-error.component';
+import MeetingRoomDetails from '../../components/meeting-room-details/meeting-room-details.component';
+import SlotsPicker from '../../components/slots-picker/slots-picker.component';
 
 const BookOfflineMeet = () => {
 
     const {offlineMeetNameId}=useParams();
-    const slotNamesArray =  ['9:00 AM - 11:00 AM','11:00 AM - 01:00 PM','03:00 PM - 05:00 PM','05:00 PM - 07:00 PM']
     const roomName = offlineMeetNameId.split('^-^')[0]
     const [currentMonth,setCurrentMonth]=useState(new Date().getMonth() +1);
     const [currentYear,setCurrentYear]=useState(new Date().getFullYear());
@@ -29,8 +25,10 @@ const BookOfflineMeet = () => {
     const [currentDate,setCurrentDate]=useState('');
     const [isCheckBookingDialogOpen,setIsCheckBookingDialogOpen]=useState(false);
     const {offlineMeetingsArray}=useMeetingRoomsContext();
-    const [currentMeetingRoom,setCurrentMeetingRoom]=useState({});
+    const [currentMeetingRoom,setCurrentMeetingRoom]=useState([]);
     const [isDbErrorOccured,setIsDbErrorOccured]=useState(false);
+    const [loadingCalenderAvailability,setLoadingCalenderAvailability]=useState(true);
+    const todayDate = new Date().getDate();
     
     useEffect(()=>{
         setCurrentMeetingRoom(offlineMeetingsArray.filter(obj=>obj.meetingRoomName === roomName))
@@ -69,63 +67,38 @@ const BookOfflineMeet = () => {
     return ( 
         <div className='book-offline-meet-div'>
             <h1>{roomName}</h1>
-            <div className='slots-div'>
-            {slotNamesArray.map((slotName,index)=>{
-                return <div key={`slot-name-divs-${index}`} style={{backgroundColor:currentSlot===slotName ?'rgb(72,139,255)':'',color:currentSlot===slotName ? 'ghostwhite':''}} onClick={()=>handleSlotClick(slotName)} >
-                    <span>{`slot ${index+1}`}</span>
-                    <span>{slotName}</span>
-                </div>
-            })}
-            </div>
+            <SlotsPicker currentSlot={currentSlot} handleSlotClick={handleSlotClick} />
             <div className='calender-div'>
-                <div className='calender main-box-shadow'>
+                 <div className='calender main-box-shadow'>
                     <p>{monthArray[currentMonth-1]} {currentYear} </p>
                     <div className='controls'>
                         {calStepCount > 0 && <span className='button-box-shadow prev' onClick={()=>handleMonthChange(false)}><FaCircleChevronLeft/> prev</span>}
                     <span>{currentSlot ? currentSlot : '00:00 - 00:00'}</span>    
                         <span className='button-box-shadow next' onClick={()=>handleMonthChange(true)}> next <FaCircleChevronRight/></span>
                     </div>
-                    <div className='main'>
+                    {loadingCalenderAvailability ? <div className='main'>
                         {dayArray.map((currDay)=>{
                             return <div key={`calender-div-${currDay}`} className='i-col'>
                                 <div>{currDay.slice(0,3)}</div>
                                 {calenderData.filter(obj=>obj.day.toLowerCase() === currDay.toLowerCase()).map((obj,index)=>{
                                     const num = obj.date.split('/')[1]
                                     return <div className='i-div button-box-shadow' key={`calender-inner-div-${index}`} onClick={()=>{
+                                        if(calStepCount ===0 && num < todayDate) return;
                                         setCurrentDate(`${obj.date}-${currDay}`)
                                         setIsConfirmMeetingDialogOpen(true)}} style={{visibility:num === '00' ? 'hidden' :''}} >{num}
-                                    <div className='light'></div>
+                                    <div className='light' style={{backgroundColor:calStepCount===0 && num < todayDate ? 'gray' : 'green'}}></div>
                                     </div>
                                 })}
                             </div>
                         })}
-                    </div>
+                    </div>:<div className='calender-loading'>
+                        <Loader lw={'70px'} lh={'70px'} />
+                        <p>Loading room availability</p>
+                    </div>}
                 </div>
-                <div className='room-details main-box-shadow'>
-                        <div className='avatar'>
-                            <SiGoogleclassroom/>
-                        </div>
-                        <div className='details'>
-                            <div >
-                                <p> <FaLocationDot/> {currentMeetingRoom[0]?.location} </p>
-                            </div>
-                            <div >
-                                <p> <BsFillPeopleFill/> {currentMeetingRoom[0]?.capacity} members</p>
-                            </div>
-                        </div>
-                        <div className='contents'>
-                            <div className='avatar'> <FaBoxOpen/> </div>
-                            <div className='content'>
-                            {currentMeetingRoom[0]?.itemArray?.map((item,idx)=>{
-                                return <span key={`room-contents-${idx}`}>
-                                <BiSolidBookContent/> {item}
-                                </span>
-                            })}
-                            </div>
-                        </div>
-                </div>
+                <MeetingRoomDetails currentMeetingRoom={currentMeetingRoom} />
             </div>
-            {isConfirmMeetingDialogOpen && <ConfirmMeetingDialog  currentSlot={currentSlot} meetingRoomName={meetingRoomName} setIsConfirmMeetingDialogOpen={setIsConfirmMeetingDialogOpen} currentDate={currentDate} />}
+            {isConfirmMeetingDialogOpen && <ConfirmMeetingDialog meetingRoomId={meetingRoomId} currentSlot={currentSlot} meetingRoomName={roomName} setIsConfirmMeetingDialogOpen={setIsConfirmMeetingDialogOpen} currentDate={currentDate} currentMonth={currentMonth} />}
             {isCheckBookingDialogOpen && <CheckBookingDialog currentSlot={currentSlot} currentDate={currentDate} setIsCheckBookingDialogOpen={setIsCheckBookingDialogOpen} />}
         </div>
      );

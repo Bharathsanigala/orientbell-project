@@ -39,9 +39,21 @@ const OfflineMeet = () => {
     },[offlineMeetingsArray])
 
     const handleFilterData=(val)=>{
-        setFilteredMeetingRoomData(offlineMeetingsArray.filter(obj=>obj.meetingRoomName?.toLowerCase()?.startsWith(val.toLowerCase())))
+        const query = val.trim().toLowerCase()
+        if(!query) {
+            setFilteredMeetingRoomData(offlineMeetingsArray)
+            return;
+        }
+        setFilteredMeetingRoomData(
+            offlineMeetingsArray.filter(obj=>
+                obj.meetingRoomName
+                ?.toLowerCase()
+                ?.split(' ')
+                ?.some(word=>word?.startsWith(query))
+            )
+        )
     }
-
+    
     if(isDbErrorOccured){
         return <DbError/>
     }

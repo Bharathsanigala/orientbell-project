@@ -29,9 +29,6 @@ const AddMeetingRoomDialog = ({setIsAddMeetingDialogOpen}) => {
 
     const closeHandler=()=>{
         setAnimationClass('fadeOutDown');
-        setTimeout(()=>{
-            setIsAddMeetingDialogOpen(false)
-        },600)
     }
 
     const handleMeetingRoomsPush=async ()=>{
@@ -41,14 +38,14 @@ const AddMeetingRoomDialog = ({setIsAddMeetingDialogOpen}) => {
         if(trimmedRoomName && trimmedRoomLocation && trimmedRoomCapacity){
             let itemArray = contentArray?.length ? contentArray :['no items']
             try{
+                closeHandler()
                 const offlineMeetigRoomsDataRef = ref(realtimeDatabase,`offlineMeetingRoomsData`)
                 await push(offlineMeetigRoomsDataRef,{
                 meetingRoomName:trimmedRoomName,
                 location:trimmedRoomLocation,
                 capacity:trimmedRoomCapacity,
                 itemArray:itemArray
-            })
-            closeHandler()
+            }) 
             }catch(e){
                 console.error('error adding meeting room to db',e)
                 alert('Failed to add meeting room. Please try again.')
@@ -59,7 +56,9 @@ const AddMeetingRoomDialog = ({setIsAddMeetingDialogOpen}) => {
 
     return ( 
         <div className='overlaying'>
-        <div className= {`add-meeting-room-dialog-div animate__animated animate__${animationClass}`} >
+        <div className= {`add-meeting-room-dialog-div animate__animated animate__${animationClass}`} onAnimationEnd={() => {
+        if (animationClass === 'fadeOutDown') setIsAddMeetingDialogOpen(false);
+    }} >
         <h3>Add meeting room</h3>
         <div className='input-group'>
                     <div>

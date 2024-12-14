@@ -19,17 +19,14 @@ const DeleteMeetingRoomDialog = ({setIsDeleteMeetingDialogOpen,roomName,roomId})
 
     const closeHandler=()=>{
         setAnimationClass('fadeOutDown');
-        setTimeout(()=>{
-            setIsDeleteMeetingDialogOpen(false)
-        },600)
     }
 
     const handleMeetingRoomDelete=async ()=>{
         if(roomId){
             try{
                 const offlineMeetigRoomsDataRef = ref(realtimeDatabase,`offlineMeetingRoomsData/${roomId}`)
-                await remove(offlineMeetigRoomsDataRef)
                 closeHandler()
+                await remove(offlineMeetigRoomsDataRef)
             }catch(e){
                 console.error('error deleting meeting room from db',e)
                 alert('Failed to delete meeting room. Please try again.')
@@ -39,7 +36,9 @@ const DeleteMeetingRoomDialog = ({setIsDeleteMeetingDialogOpen,roomName,roomId})
 
     return ( 
         <div className='overlaying'>
-        <div className={`delete-meeting-room-dialog-div animate__animated animate__${animationClass}`}>
+        <div className={`delete-meeting-room-dialog-div animate__animated animate__${animationClass}`} onAnimationEnd={() => {
+        if (animationClass === 'fadeOutDown') setIsDeleteMeetingDialogOpen(false);
+    }}>
             <h3>Remover</h3>
             <div className='d-img'>
             <SiGoogleclassroom/>

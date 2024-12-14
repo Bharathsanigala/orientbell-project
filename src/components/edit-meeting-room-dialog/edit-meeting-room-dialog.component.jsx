@@ -25,9 +25,6 @@ const EditMeetingRoomDialog = ({roomName,roomLocation,roomCapacity,setIsEditMeet
 
     const closeHandler=()=>{
         setAnimationClass('fadeOutDown');
-        setTimeout(()=>{
-            setIsEditMeetingDialogOpen(false)
-        },600)
     }
 
     const handleMeetingRoomUpdate=async ()=>{
@@ -40,8 +37,8 @@ const EditMeetingRoomDialog = ({roomName,roomLocation,roomCapacity,setIsEditMeet
         if(Object.keys(updateObject).length){
             try{
                 const offlineMeetigRoomsDataRef = ref(realtimeDatabase,`offlineMeetingRoomsData/${roomId}`)
-                await update(offlineMeetigRoomsDataRef,updateObject)
                 closeHandler()
+                await update(offlineMeetigRoomsDataRef,updateObject)
             }catch(e){
                 console.error("Error updating meeting room:", e);
                 alert("Failed to update the meeting room. Please try again.");
@@ -63,7 +60,9 @@ const EditMeetingRoomDialog = ({roomName,roomLocation,roomCapacity,setIsEditMeet
 
     return (  
         <div className='overlaying'>
-        <div className={`div-placement animate__animated animate__${animationClass}`}>
+        <div className={`div-placement animate__animated animate__${animationClass}`} onAnimationEnd={() => {
+        if (animationClass === 'fadeOutDown') setIsEditMeetingDialogOpen(false);
+    }} >
             <div className='edit-meeting-room-dialog-div '>
                 <h3>Editor</h3>
                 <div className='input-group'>

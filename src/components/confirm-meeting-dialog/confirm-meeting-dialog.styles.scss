@@ -30,6 +30,17 @@
                 border-radius: 5px;
                 font-size: 130%;
             }
+            span{
+                margin-left: 3px;
+            }
+        }
+        button{
+            padding: 10px;
+            border: 0;
+            font-size: 110%;
+            margin-top: 10px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
         }
     }
     .btn-wrapper{
@@ -40,4 +51,21 @@
             padding: 10px;
         }
     }
+}
+.b-loading{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+    padding: 20px 5px;
+    .svg-img{
+        font-size: 800%;
+    }
+}
+.close-btn{
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
 }

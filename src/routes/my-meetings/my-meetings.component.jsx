@@ -1,66 +1,97 @@
 import './my-meetings.styles.scss';
 import myMeetingsImg from '../../assets/void.svg'
 import { SiGoogleclassroom } from "react-icons/si";
-import { FaRegSquareMinus } from "react-icons/fa6";
+import { FaRegSquareMinus,FaTrash } from "react-icons/fa6";
 import { useEffect, useState } from 'react';
 import Loader from '../../components/loader/loader.component';
 import DbError from '../../components/db-error/db-error.component';
-import { onValue, ref } from 'firebase/database';
-import { realtimeDatabase } from '../../utils/firebase/firebase';
-
+import { useAuthContext } from '../../contexts/auth-context.context';
+import { collection, onSnapshot } from 'firebase/firestore';
+import { firestoreDatabase } from '../../utils/firebase/firebase';
+import Sorters from '../../components-2/sorters/sorters.component';
 const MyMeetings = () => {
 
-    const mockArray = [
-        {meetingRoomName:'test meeting room at 1',meetingSlot:'9:00 AM - 11:00 AM',meetingDate:'12-10-24 & sunday',key:'1a',bookingTime:'Sun, 08 Dec 2024 06:47:21 GMT'},
-        {meetingRoomName:'test meeting room at 1',meetingSlot:'9:00 AM - 11:00 AM',meetingDate:'12-10-24 & sunday',key:'1b',bookingTime:'Sun, 08 Dec 2024 06:47:21 GMT'},
-        {meetingRoomName:'test meeting room at 1',meetingSlot:'9:00 AM - 11:00 AM',meetingDate:'12-10-24 & sunday',key:'1c',bookingTime:'Sun, 08 Dec 2024 06:47:21 GMT'},
-        {meetingRoomName:'test meeting room at 1',meetingSlot:'9:00 AM - 11:00 AM',meetingDate:'12-10-24 & sunday',key:'1d',bookingTime:'Sun, 08 Dec 2024 06:47:21 GMT'},
-    ]
-    const [isMymeetingsLoading,setIsMyMeetingsLoading]=useState(false);
-    const [isDbErrorOccured,setIsDbErrorOccured]=useState(false);
+    const [myMeetingsState,setMyMeetingsState]=useState('') //idle,loading,error
+    const [myMeetingsDataArray,setMyMeetingsDataArray]=useState([]);
+    const {user}=useAuthContext()
 
-    if(isDbErrorOccured){
-            return <DbError/>
+    useEffect(()=>{
+        if(!user) return;
+        const userBookingsRef = collection(firestoreDatabase,`userBookings/${user.uid}/bookings`);
+        let unsubscribeFromFirestore = null;
+        const fetchUserBookings=async()=>{
+            setMyMeetingsState('loading')
+            try{
+                unsubscribeFromFirestore = onSnapshot(userBookingsRef,(snapshot)=>{
+                    if(!snapshot.empty){
+                        const data = snapshot.docs.map(doc=>({key:doc.id,...doc.data()}))
+                        setMyMeetingsDataArray(data);
+                    }else{
+                        setMyMeetingsDataArray([]);
+                    }
+                })
+                setMyMeetingsState('idle')
+            }catch(e){
+                console.error('error fetching my meetings',e)
+                setMyMeetingsDataArray([]);
+                setMyMeetingsState('error')
+            }
         }
+        fetchUserBookings()
+        return ()=>{
+            if(unsubscribeFromFirestore) unsubscribeFromFirestore()
+        }
+    },[user])
 
-    if(isMymeetingsLoading){
-        return <div className='loader-class'>
-            <Loader lh={'100px'} lw={'100px'} />
-            <p>loading my meetings</p>
-        </div>
+    const daysLeft=(targetDate)=>{
+        const timeDifferenceInMilliSeconds = new Date(targetDate) - new Date()
+        const val= Math.ceil(timeDifferenceInMilliSeconds/(1000*60*60*24))
+        
+        return val > 0 ? `${(val)} days left` : 'completed' 
     }
-
 
     return ( 
         <div className='my-meetings-div'>
             <h1>My Meetings</h1>
-            {!mockArray.length >0 ? <div className='no-meetings'>
+            {!myMeetingsDataArray.length >0 && <div className='no-meetings'>
                 <img src={myMeetingsImg} style={{width:'35%'}} />
-            </div>:<div className='has-meetings'>
-                    {mockArray.map(obj=>{
+            </div>}
+            {myMeetingsState === 'loading' && <div className='loader-class'>
+            <Loader lh={'100px'} lw={'100px'} />
+            <p>loading my meetings</p>
+        </div> }
+            {myMeetingsState === 'error' && <DbError/>}
+            {myMeetingsState === 'idle' && <div className='sorts'>
+                <Sorters label={'sort by booking time'} myMeetingsDataArray={myMeetingsDataArray} setMyMeetingsDataArray={setMyMeetingsDataArray} type={'bookedAt'} />
+                <Sorters label={'sort by meeting time'} myMeetingsDataArray={myMeetingsDataArray} setMyMeetingsDataArray={setMyMeetingsDataArray} type={'bookedDate'} />
+            </div>}
+            {myMeetingsState === 'idle' && <div className='has-meetings'>
+                    {myMeetingsDataArray.map(obj=>{
+                        const daysRemaining = daysLeft(`${obj?.bookedDate?.split('-')[0]}, ${obj?.bookedSlot?.split('AM')[0]}`)
                         return <div key={obj.key} className='tile main-box-shadow'>
                                 <div className='avatar'>
                                     <SiGoogleclassroom/>
+                                    <span style={{color:daysRemaining === 'completed' ? 'red' : 'green'}}>{daysRemaining}</span>
                                 </div>
                                 <div className='details'>
                                     <div>
-                                        <span>name</span>
-                                        <p>{obj.meetingRoomName}</p>
+                                        <span>meeting room</span>
+                                        <p>{obj?.bookedMeetingRoomName}</p>
                                     </div>
                                     <div>
-                                        <span>slot</span>
-                                        <p>{obj.meetingSlot}</p>
+                                        <span>meeting slot</span>
+                                        <p>{obj?.bookedSlot}</p>
                                     </div>
                                     <div>
-                                        <span>date</span>
-                                        <p>{obj.meetingDate}</p>
+                                        <span>meeting date</span>
+                                        <p>{obj?.bookedDate}</p>
                                     </div>
                                     <div>
-                                        <span>booked at</span>
-                                        <p>{obj.bookingTime.split('GMT')[0]}</p>
+                                        <span>booked time</span>
+                                        <p>{obj?.bookedAt?.toDate()?.toLocaleString()}</p>
                                     </div>
                                 </div>
-                                <div className='button-box-shadow delete-meeting'><FaRegSquareMinus/>unenroll</div>
+                                {daysRemaining !== 'completed' ? <div className='button-box-shadow delete-meeting'><FaRegSquareMinus/>unenroll</div> : <div className='button-box-shadow delete-meeting'> <FaTrash/> delete</div>}
                         </div>
                     })}
             </div>}

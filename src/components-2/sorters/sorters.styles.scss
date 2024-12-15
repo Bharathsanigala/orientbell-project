@@ -1,0 +1,17 @@
+.sorters-div{
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-radius: 7px;
+    .opts{
+        display: flex;
+        gap: 10px;
+        div{
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+    }
+}

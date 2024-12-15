@@ -1,6 +1,6 @@
 import './confirm-meeting-dialog.styles.scss';
 import PropTypes from 'prop-types';
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { FaRegCalendarCheck,FaCircleCheck } from "react-icons/fa6";
 import { useUserRoleContext } from '../../contexts/user-role.context';
 import { firestoreDatabase } from '../../utils/firebase/firebase';
@@ -10,7 +10,7 @@ import { monthArray } from '../../helpers/helpers';
 import Loader from '../../components/loader/loader.component';
 import { FcDeleteDatabase } from "react-icons/fc";
 
-const ConfirmMeetingDialog = ({currentSlot,meetingRoomName,currentDate,setIsConfirmMeetingDialogOpen,meetingRoomId,currentMonth}) => {
+const ConfirmMeetingDialog = ({currentSlot,meetingRoomName,currentDate,setIsConfirmMeetingDialogOpen,meetingRoomId,currentMonth,currentStatus,setCurrentStatus,bookedSlotArrays}) => {
 
     const [addMail,setAddMail]=useState('');
     const {fetchedUserRoleData}=useUserRoleContext();
@@ -19,7 +19,6 @@ const ConfirmMeetingDialog = ({currentSlot,meetingRoomName,currentDate,setIsConf
     const [animationClass,setAnimationClass]=useState('slideInDown')
     const [bookingState,setBookingState]=useState('idle'); //idle,loading,error,success
 
-    
     const handleDialogClose=(bool)=>{
         if(bool){
             handleMeetingRoomBooking()
@@ -33,7 +32,7 @@ const ConfirmMeetingDialog = ({currentSlot,meetingRoomName,currentDate,setIsConf
     }
 
     const handleMeetingRoomBooking=async ()=>{
-        if(meetingRoomId && currentDate && currentSlot && meetingRoomName){
+        if(meetingRoomId && currentDate && currentSlot && meetingRoomName && currentStatus){
             setBookingState('loading')
             const day = currentDate.split('/')[1]
             try{
@@ -83,6 +82,10 @@ const ConfirmMeetingDialog = ({currentSlot,meetingRoomName,currentDate,setIsConf
         }
     }
 
+    useEffect(()=>{
+        bookedSlotArrays?.[currentSlot]?.includes(currentDate.split('/')[1]) ? setCurrentStatus(false) : setCurrentStatus(true)
+    },[bookedSlotArrays,currentDate,currentSlot,setCurrentStatus])
+
     return ( 
         <div className='overlaying'>
         <div className={`confirm-meeting-dialog-div animate__animated animate__${animationClass}`} onAnimationEnd={() => {
@@ -101,12 +104,12 @@ const ConfirmMeetingDialog = ({currentSlot,meetingRoomName,currentDate,setIsConf
                 <p>Error occured. Please Try Later!</p>
             </div>}
             {bookingState === 'success' && <div className='b-loading'>
-                <FaCircleCheck className='svg-img' style={{color:'green'}} />
+                <FaCircleCheck className='svg-img animate__animated animate__bounceIn' style={{color:'green'}} />
                 <p>Hooray! Your Booking is Success.</p>
             </div>}
             {(bookingState === 'error' || bookingState === 'success') && <div className='button-box-shadow close-btn' onClick={()=>handleDialogClose(false)} >close</div>}
             {bookingState === 'idle' && <Fragment>
-            <div>status : <span style={{color:'green'}}>available</span> </div>
+            <div>status : <span style={{color:currentStatus ? 'green' : 'red'}}>{currentStatus ? 'available' : 'not available'}</span> </div>
             <div className='content'>
                 <div>
                 <span>name</span>
@@ -127,7 +130,7 @@ const ConfirmMeetingDialog = ({currentSlot,meetingRoomName,currentDate,setIsConf
             </div>
             <div className='btn-wrapper'>
                 <div onClick={()=>handleDialogClose(false)}className='button-box-shadow'>cancel</div>
-                <div className='button-box-shadow' onClick={()=>handleDialogClose(true)}>confirm</div>
+                {currentStatus && <div className='button-box-shadow' onClick={()=>handleDialogClose(true)}>confirm</div>}
             </div>
             </Fragment>}
         </div>
@@ -141,5 +144,8 @@ ConfirmMeetingDialog.propTypes={
     setIsConfirmMeetingDialogOpen:PropTypes.func,
     meetingRoomId:PropTypes.string,
     currentMonth:PropTypes.number,
+    currentStatus:PropTypes.bool,
+    setCurrentStatus:PropTypes.func,
+    bookedSlotArrays:PropTypes.object,
 }
 export default ConfirmMeetingDialog;

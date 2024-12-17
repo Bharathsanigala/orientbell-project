@@ -1,0 +1,13 @@
+.unenroll-meeting-dialog-div{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background-color: var(--pure-clr);
+    align-items: center;
+    padding: 20px;
+    border-radius: 7px;
+    max-width: 350px;
+    h4{
+        font-size: 150%;
+    }
+}

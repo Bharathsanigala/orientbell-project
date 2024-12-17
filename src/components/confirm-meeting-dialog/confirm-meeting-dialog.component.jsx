@@ -1,14 +1,13 @@
 import './confirm-meeting-dialog.styles.scss';
 import PropTypes from 'prop-types';
 import { Fragment, useEffect, useState } from 'react';
-import { FaRegCalendarCheck,FaCircleCheck } from "react-icons/fa6";
+import { FaRegCalendarCheck } from "react-icons/fa6";
 import { useUserRoleContext } from '../../contexts/user-role.context';
 import { firestoreDatabase } from '../../utils/firebase/firebase';
 import { useAuthContext } from '../../contexts/auth-context.context';
 import { arrayUnion, collection, doc, writeBatch,serverTimestamp, query, where, getDocs } from 'firebase/firestore';
 import { monthArray } from '../../helpers/helpers';
-import Loader from '../../components/loader/loader.component';
-import { FcDeleteDatabase } from "react-icons/fc";
+import DialogStatesUi from '../../components-2/dialog-states-ui/dialog-states-ui.component';
 
 const ConfirmMeetingDialog = ({currentSlot,meetingRoomName,currentDate,setIsConfirmMeetingDialogOpen,meetingRoomId,currentMonth,currentStatus,setCurrentStatus,bookedSlotArrays}) => {
 
@@ -48,6 +47,7 @@ const ConfirmMeetingDialog = ({currentSlot,meetingRoomName,currentDate,setIsConf
                 const userBookingsRef=doc(collection(firestoreDatabase,`userBookings/${userUid}/bookings`));
                 batch.set(userBookingsRef,{
                     bookedMeetingRoomName:meetingRoomName,
+                    bookedMeetingRoomId:meetingRoomId,
                     bookedSlot:currentSlot,
                     bookedDate:currentDate,
                     bookedAt:serverTimestamp()
@@ -92,22 +92,10 @@ const ConfirmMeetingDialog = ({currentSlot,meetingRoomName,currentDate,setIsConf
         if (animationClass === 'fadeOutDown') setIsConfirmMeetingDialogOpen(false);
     }} >
             <h4>confirm booking</h4>
-            <div className='avatar' >
+            <div className='c-avatar' >
                 <FaRegCalendarCheck  />
             </div>
-            {bookingState === 'loading' && <div className='b-loading'>
-             <Loader lw={'80px'} lh={'80px'} />
-            <p>Booking in progress. Please Wait!</p>
-            </div>}
-            {bookingState === 'error' && <div className='b-loading'>
-                <FcDeleteDatabase className='svg-img' />
-                <p>Error occured. Please Try Later!</p>
-            </div>}
-            {bookingState === 'success' && <div className='b-loading'>
-                <FaCircleCheck className='svg-img animate__animated animate__bounceIn' style={{color:'green'}} />
-                <p>Hooray! Your Booking is Success.</p>
-            </div>}
-            {(bookingState === 'error' || bookingState === 'success') && <div className='button-box-shadow close-btn' onClick={()=>handleDialogClose(false)} >close</div>}
+            <DialogStatesUi state={bookingState} loadingMessage={'Booking in progress. Please Wait!'} successMessage={'Hooray! Your Booking is Success.'} dialogCloser={handleDialogClose} dialogType={'cmd'} />
             {bookingState === 'idle' && <Fragment>
             <div>status : <span style={{color:currentStatus ? 'green' : 'red'}}>{currentStatus ? 'available' : 'not available'}</span> </div>
             <div className='content'>
@@ -128,8 +116,8 @@ const ConfirmMeetingDialog = ({currentSlot,meetingRoomName,currentDate,setIsConf
                 <input className='n-input' value={addMail} placeholder='receipent email' type='email' onChange={(e)=>setAddMail(e.target.value)} />
                 </div>}
             </div>
-            <div className='btn-wrapper'>
-                <div onClick={()=>handleDialogClose(false)}className='button-box-shadow'>cancel</div>
+            <div className='c-btn-wrapper'>
+                <div onClick={()=>handleDialogClose(false)} className='button-box-shadow'>cancel</div>
                 {currentStatus && <div className='button-box-shadow' onClick={()=>handleDialogClose(true)}>confirm</div>}
             </div>
             </Fragment>}

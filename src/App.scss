@@ -159,3 +159,26 @@ body{
         font-size: 800%;
     }
 }
+
+.close-btn{
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.c-btn-wrapper{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    div{
+        padding: 10px;
+    }
+}
+
+.c-avatar{
+    svg{
+        font-size: 230%;
+    }
+}

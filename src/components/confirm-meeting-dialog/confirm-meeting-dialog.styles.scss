@@ -10,11 +10,6 @@
     h4{
         font-size: 120%;
     }
-    .avatar{
-        svg{
-            font-size: 230%;
-        }
-    }
     .content{
         display: flex;
         flex-direction: column;
@@ -43,19 +38,4 @@
             color: var(--text-color);
         }
     }
-    .btn-wrapper{
-        display: flex;
-        width: 100%;
-        justify-content: space-between;
-        div{
-            padding: 10px;
-        }
-    }
-}
-.close-btn{
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
 }

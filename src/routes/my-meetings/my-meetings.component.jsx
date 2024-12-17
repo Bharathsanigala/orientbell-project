@@ -9,10 +9,21 @@ import { useAuthContext } from '../../contexts/auth-context.context';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { firestoreDatabase } from '../../utils/firebase/firebase';
 import Sorters from '../../components-2/sorters/sorters.component';
+import UnEnrollMeetingDialog from '../../components-2/unenroll-meeting-dialog/unenroll-meeting-dialog.component';
+import DeleteMeetingBookingDialog from '../../components-2/delete-meeting-booking-dialog/delete-meeting-booking-dialog.component';
+import AboutBookingPart from '../../components-2/about-booking-part/about-booking-part.component';
+
 const MyMeetings = () => {
 
     const [myMeetingsState,setMyMeetingsState]=useState('') //idle,loading,error
     const [myMeetingsDataArray,setMyMeetingsDataArray]=useState([]);
+    const [isDeleteMeetingBookingDialogOpen,setIsDeleteMeetingBookingDialogOpen]=useState(false);
+    const [isUnenrollMeetingDialogOpen,setIsUnenrollMeetingDialogOpen]=useState(false);
+    const [roomName,setRoomName]=useState('');
+    const [meetingSlot,setMeetingSlot]=useState('');
+    const [meetingDate,setMeetingDate]=useState('')
+    const [roomId,setRoomId]=useState('');
+    const [docId,setDocId]=useState('');
     const {user}=useAuthContext()
 
     useEffect(()=>{
@@ -42,6 +53,13 @@ const MyMeetings = () => {
             if(unsubscribeFromFirestore) unsubscribeFromFirestore()
         }
     },[user])
+
+    const stateSetter=(room,date,slot,key)=>{
+        setRoomName(room)
+        setMeetingDate(date)
+        setMeetingSlot(slot)
+        setDocId(key)
+    }
 
     const daysLeft=(targetDate)=>{
         const timeDifferenceInMilliSeconds = new Date(targetDate) - new Date()
@@ -91,10 +109,23 @@ const MyMeetings = () => {
                                         <p>{obj?.bookedAt?.toDate()?.toLocaleString()}</p>
                                     </div>
                                 </div>
-                                {daysRemaining !== 'completed' ? <div className='button-box-shadow delete-meeting'><FaRegSquareMinus/>unenroll</div> : <div className='button-box-shadow delete-meeting'> <FaTrash/> delete</div>}
+                                {daysRemaining !== 'completed' ? <div className='button-box-shadow delete-meeting' onClick={()=>{
+                                    stateSetter(obj.bookedMeetingRoomName,obj.bookedDate,obj.bookedSlot,obj.key)
+                                    setRoomId(obj.bookedMeetingRoomId)
+                                    setIsUnenrollMeetingDialogOpen(true)
+                                }}><FaRegSquareMinus/>unenroll</div> : <div className='button-box-shadow delete-meeting' onClick={()=>{
+                                    stateSetter(obj.bookedMeetingRoomName,obj.bookedDate,obj.bookedSlot,obj.key)
+                                    setIsDeleteMeetingBookingDialogOpen(true)
+                                    }}> <FaTrash/> delete</div>}
                         </div>
                     })}
             </div>}
+            {isDeleteMeetingBookingDialogOpen && <DeleteMeetingBookingDialog setIsDeleteMeetingBookingDialogOpen={setIsDeleteMeetingBookingDialogOpen} docId={docId} >
+                    <AboutBookingPart roomName={roomName} meetingSlot={meetingSlot} meetingDate={meetingDate} />
+            </DeleteMeetingBookingDialog>}
+            {isUnenrollMeetingDialogOpen && <UnEnrollMeetingDialog  setIsUnenrollMeetingDialogOpen={setIsUnenrollMeetingDialogOpen} docId={docId} roomId={roomId} meetingDate={meetingDate} meetingSlot={meetingSlot} >
+                <AboutBookingPart roomName={roomName} meetingSlot={meetingSlot} meetingDate={meetingDate} />
+            </UnEnrollMeetingDialog>}
         </div>
      );
 }

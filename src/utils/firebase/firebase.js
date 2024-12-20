@@ -26,7 +26,17 @@ const googleAuthProvider = new GoogleAuthProvider()
 export const signInWithGooglePopup =async()=>{
     try{
         const result = await signInWithPopup(auth,googleAuthProvider);
-        console.log(result.user);
+        const user = result.user;
+        const usersRef = doc(firestoreDatabase,'users',user.uid);
+        const userDoc = await getDoc(usersRef);
+        if(!userDoc.exists()){
+            await setDoc(usersRef,{
+                role:'reader',
+                email:user.email,
+                name:user.displayName || "Anonymous",
+            })
+        }
+
     }catch(e){
         console.error('error while signing in with google popup',e)
     }

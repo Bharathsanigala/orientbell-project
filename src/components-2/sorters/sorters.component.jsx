@@ -11,8 +11,10 @@ const Sorters = ({label,myMeetingsDataArray,setMyMeetingsDataArray,type}) => {
                 aDate = new Date(a.bookedAt.toDate().toLocaleString());
                 bDate = new Date(b.bookedAt.toDate().toLocaleString());
             } else if (type === 'bookedDate') {
-                aDate = new Date(`${a.bookedDate.split('-')[0]}, ${a.bookedSlot.split('AM')[0]}`);
-                bDate = new Date(`${b.bookedDate.split('-')[0]}, ${b.bookedSlot.split('AM')[0]}`);
+                const aTypeSplit = a.bookedSlot.split('-')[0].includes('AM') ? 'AM' : 'PM'
+                const bTypeSplit = b.bookedSlot.split('-')[0].includes('AM') ? 'AM' : 'PM'
+                aDate = new Date(`${a.bookedDate.split('-')[0]}, ${a.bookedSlot.split(aTypeSplit)[0]}`);
+                bDate = new Date(`${b.bookedDate.split('-')[0]}, ${b.bookedSlot.split(bTypeSplit)[0]}`);
             }
             return direction === 'asc' ? aDate - bDate : bDate - aDate;
         });

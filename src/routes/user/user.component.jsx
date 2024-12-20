@@ -7,6 +7,8 @@ import { FaEye,FaEyeSlash,FaUserAlt,FaFacebookSquare } from "react-icons/fa";
 import { signInWithGooglePopup,signInUserWithEmailAndPassword,createUserFromEmailAndPassword } from '../../utils/firebase/firebase';
 import AuthUser from '../../components/auth-user/auth-user.component';
 import { useAuthContext } from '../../contexts/auth-context.context';
+import Loader from '../../components/loader/loader.component';
+import DbError from '../../components/db-error/db-error.component';
 
 const User = () => {
 
@@ -20,18 +22,46 @@ const User = () => {
     const [signInResponseId,setSignInResponseId]=useState(0);
     const {user} = useAuthContext()
     const [isEyeClicked,setIsEyeClicked]=useState(false);
+    const [userAuthState,setUserAuthState]=useState(''); // loading, error
     const responseMessageArray=['','Successfully Signed In','Email Already Registered','Unknown Error Occured','Invalid credential Try Again.']
+
+    const googleSignIn=async(type)=>{
+        try{
+            setUserAuthState('loading');
+            if(type === 0){
+                await signInWithGooglePopup();
+            }else if(type === 1){
+                const id = await signInUserWithEmailAndPassword(signinEmail,signinPassword) ?? 0
+                setSignInResponseId(id)
+            }
+            setUserAuthState('')
+        }catch(e){
+            console.error('error occured',e)
+            setUserAuthState('error');
+        }
+    }
+
+    if(userAuthState === 'loading'){
+            return <div className='loader-class'>
+                <Loader lh={'100px'} lw={'100px'} />
+                <p>Authentication in progress. Please Wait!!!</p>
+            </div>
+        }
+    
+    if(userAuthState === 'error'){
+        return <DbError/>
+    }
 
     return ( 
         <div className='user-div '>
         <h1>User Space</h1>
-            {!user ? <div className='no-user main-box-shadow'>
+            {!user && <div className='no-user main-box-shadow'>
                 <div className='google-signin'>
                     <div className='inner-block'>
                     <h2>Welcome Back !</h2>
                     <span>To keep connected with us please login with your personal info</span>
                     <div className='btn-group'>
-                        <div onClick={signInWithGooglePopup} className='button-box-shadow'><FcGoogle/></div>
+                        <div onClick={()=>googleSignIn(0)} className='button-box-shadow'><FcGoogle/></div>
                         <div className='facebook button-box-shadow'><FaFacebookSquare /></div>
                         <div className='button-box-shadow'><FaGithub/></div>
                     </div>
@@ -88,8 +118,7 @@ const User = () => {
                         </div>
                         <button className='blu-btn' onClick={async()=>{
                             if(signinEmail.trim() && signinPassword.trim()){
-                                const id = await signInUserWithEmailAndPassword(signinEmail,signinPassword) ?? 0
-                                setSignInResponseId(id)
+                                googleSignIn(1)
                                 setSigninEmail('')
                                 setSigninPassword('')
                             }
@@ -99,7 +128,8 @@ const User = () => {
                     </Fragment>
                         </div>
                 </div>
-            </div> : <AuthUser/> }
+            </div>  }
+            { user && <AuthUser />}
         </div>
      );
 }

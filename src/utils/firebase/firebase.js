@@ -4,13 +4,13 @@ import { getDatabase } from "firebase/database";
 import { getFirestore,doc,getDoc,setDoc } from "firebase/firestore";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyBA4eM74s5GrhD-IOgu5ZboejV9Kx23ExE",
-    authDomain: "orientbell-project.firebaseapp.com",
-    databaseURL: "https://orientbell-project-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "orientbell-project",
-    storageBucket: "orientbell-project.firebasestorage.app",
-    messagingSenderId: "943792637165",
-    appId: "1:943792637165:web:88cf71b3d1660804beb8e4"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
 const app = initializeApp(firebaseConfig);

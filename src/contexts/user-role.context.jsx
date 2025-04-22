@@ -23,7 +23,8 @@ export const UserRoleProvider=({children})=>{
                         setFetchedUserRoleData({
                             fetchedUserEmail:data.email,
                             fetchedUserName:data.name,
-                            fetchedUserRole:data.role
+                            fetchedUserRole:data.role,
+                            writerAccessStatus:data.writerAccessStatus,
                         });
                         console.log('set role context')
                     }

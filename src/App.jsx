@@ -17,6 +17,7 @@ import ProtectedRoute from './routes/protected-route/protected-route.component'
 import UserRequests from './routes/user-requests/user-requests.component'
 import SearchUsers from './routes/search-users/search-users.component'
 import AdminSettings from './routes/admin-settings/admin-settings.component'
+import Plans from './routes/plans/plans.component'
 
 function App() {
 
@@ -48,6 +49,7 @@ function App() {
         <Route path='/online-meet' element={<OnlineMeet/>} />
         <Route path='/offline-meet' element={<OfflineMeet/>} />
         <Route path='/book-offline-meet/:offlineMeetNameId' element={<BookOfflineMeet/>} />
+        <Route path='/plans' element={<Plans/>} />
         <Route element={<ProtectedRoute/>} path='/admin-space'  >
           <Route path='/admin-space/search-users' element={<SearchUsers/>} />
           <Route path='/admin-space/user-requests' element={<UserRequests/>} />

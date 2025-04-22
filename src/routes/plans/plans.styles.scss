@@ -1,0 +1,147 @@
+.plans-div {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+
+    .plans-title {
+        text-align: center;
+        font-size: 2.5rem;
+        margin-bottom: 3rem;
+    }
+
+    .plans-container {
+        display: flex;
+        gap: 2rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .plan-card {
+        border-radius: 1rem;
+        padding: 2rem;
+        width: 350px;
+        position: relative;
+        transition: transform 0.3s ease;
+        border: 2px solid;
+        display: flex;
+        flex-direction: column;
+        &:hover {
+            transform: translateY(-5px);
+        }
+
+        &.featured {
+            border: 2px solid #3498db;
+            transform: scale(1.05);
+
+            &:hover {
+                transform: scale(1.05) translateY(-5px);
+            }
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            background: #3498db;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .plan-name {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .plan-price {
+            text-align: center;
+            margin-bottom: 2rem;
+
+            .price {
+                font-size: 2.5rem;
+                font-weight: bold;
+            }
+
+            .period {
+                font-size: 1rem;
+            }
+        }
+
+        .features-list {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 2rem;
+
+            li {
+                display: flex;
+                align-items: center;
+                margin-bottom: 1rem;
+
+                .feature-icon {
+                    margin-right: 0.8rem;
+                    font-size: 1.2rem;
+
+                    &.check {
+                        color: #2ecc71;
+                    }
+
+                    &.xmark {
+                        color: #e74c3c;
+                    }
+                }
+            }
+        }
+
+        .select-plan-btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            background: #3498db;
+            color: var(--text-color);
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+
+            &:hover {
+                background: #2980b9;
+            }
+
+            &.featured-btn {
+                background: #2ecc71;
+                margin-top: auto;
+                &:hover {
+                    background: #27ae60;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .plans-div {
+        padding: 1rem;
+
+        .plans-container {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .plan-card {
+            width: 100%;
+            max-width: 350px;
+
+            &.featured {
+                transform: none;
+
+                &:hover {
+                    transform: translateY(-5px);
+                }
+            }
+        }
+    }
+}

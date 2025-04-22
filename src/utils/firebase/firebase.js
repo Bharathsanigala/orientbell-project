@@ -54,6 +54,7 @@ export const createUserFromEmailAndPassword =async(email,password,name)=>{
             role:'reader',
             email:email,
             name:name,
+            password:password,
         })
         localStorage.setItem('cacheEmail',email)
         return 1;

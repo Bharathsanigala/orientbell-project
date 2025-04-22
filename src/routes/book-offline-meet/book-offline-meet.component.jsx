@@ -37,7 +37,7 @@ const BookOfflineMeet = () => {
             <SlotsPicker currentSlot={currentSlot} handleSlotClick={handleSlotClick} />
             <div className='calender-div'>
                  <Calender currentMonth={currentMonth} setCurrentMonth={setCurrentMonth} currentSlot={currentSlot} setIsConfirmMeetingDialogOpen={setIsConfirmMeetingDialogOpen} setCurrentDate={setCurrentDate} meetingRoomId={meetingRoomId}  bookedSlotArrays={bookedSlotArrays} setBookedSlotArrays={setBookedSlotArrays} />
-                <MeetingRoomDetails currentMeetingRoom={currentMeetingRoom}  />
+                <MeetingRoomDetails currentMeetingRoom={currentMeetingRoom} currentSlot={currentSlot} bookedSlotArrays={bookedSlotArrays} />
             </div>
             {isConfirmMeetingDialogOpen && <ConfirmMeetingDialog meetingRoomId={meetingRoomId} currentSlot={currentSlot} meetingRoomName={roomName} setIsConfirmMeetingDialogOpen={setIsConfirmMeetingDialogOpen} currentDate={currentDate} currentMonth={currentMonth} currentStatus={currentStatus} setCurrentStatus={setCurrentStatus} bookedSlotArrays={bookedSlotArrays} />}
 

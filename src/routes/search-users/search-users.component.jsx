@@ -2,7 +2,7 @@ import './search-users.styles.scss';
 import { FaUsersCog } from "react-icons/fa";
 import { FaCircleArrowUp, FaCircleArrowDown } from "react-icons/fa6";
 import { useState } from 'react';
-import { collection, query, where, getDocs, doc, deleteDoc, updateDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, deleteDoc, updateDoc,deleteField } from 'firebase/firestore';
 import {firestoreDatabase} from '../../utils/firebase/firebase.js';
 
 const SearchUsers = () => {
@@ -73,7 +73,8 @@ const SearchUsers = () => {
         try {
             const userRef = doc(firestoreDatabase, 'users', userData.id);
             await updateDoc(userRef, {
-                role: 'writer'
+                role: 'writer',
+                writerAccessStatus:deleteField(),
             });
             
             setUserData({
@@ -97,7 +98,8 @@ const SearchUsers = () => {
         try {
             const userRef = doc(firestoreDatabase, 'users', userData.id);
             await updateDoc(userRef, {
-                role: 'reader'
+                role: 'reader',
+                writerAccessStatus:deleteField(),
             });
             
             setUserData({

@@ -2,8 +2,9 @@ import './search-users.styles.scss';
 import { FaUsersCog } from "react-icons/fa";
 import { FaCircleArrowUp, FaCircleArrowDown } from "react-icons/fa6";
 import { useState } from 'react';
-import { collection, query, where, getDocs, doc, deleteDoc, updateDoc,deleteField } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, updateDoc, deleteField, writeBatch, arrayRemove } from 'firebase/firestore';
 import {firestoreDatabase} from '../../utils/firebase/firebase.js';
+import { monthArray } from '../../helpers/helpers';
 
 const SearchUsers = () => {
     const [email, setEmail] = useState('');
@@ -45,14 +46,36 @@ const SearchUsers = () => {
         setLoading(false);
     };
 
-    const handleCancelBooking = async (bookingId, userId) => {
-        if (!userId || !bookingId) return;
+    const handleCancelBooking = async (bookingId, userId, roomId) => {
+        if (!userId || !bookingId || !roomId) return;
         
         setCancellingBookingId(bookingId);
         try {
-            // Delete the booking document from Firestore
+            // Find the booking to get the necessary details before deleting
+            const booking = bookings.find(booking => booking.id === bookingId);
+            if (!booking) {
+                throw new Error('Booking not found');
+            }
+            
+            // Extract day and month from bookedDate
+            const dayToRemove = booking.bookedDate.split('/')[1];
+            const monthName = monthArray[booking.bookedDate.split('/')[0]-1];
+            
+            // Use batch to ensure atomicity of operations
+            const batch = writeBatch(firestoreDatabase);
+            
+            // Delete the booking document from user's bookings
             const bookingRef = doc(firestoreDatabase, 'userBookings', userId, 'bookings', bookingId);
-            await deleteDoc(bookingRef);
+            batch.delete(bookingRef);
+            
+            // Update the meeting room bookings to remove the day from the slot array
+            const meetingBookingsRef = doc(firestoreDatabase, `meetingRoomsBookings/${roomId}/calender/${monthName}`);
+            batch.update(meetingBookingsRef, {
+                [booking.bookedSlot]: arrayRemove(dayToRemove),
+            });
+            
+            // Commit the batch
+            await batch.commit();
             
             // Update the UI by removing the cancelled booking
             setBookings(prevBookings => prevBookings.filter(booking => booking.id !== bookingId));
@@ -189,12 +212,12 @@ const SearchUsers = () => {
                                     <div key={booking.id} className='booking-tile'>
                                         <div className='booking-details'>
                                             <p><strong>Room:</strong> {booking.bookedMeetingRoomName}</p>
-                                            <p><strong>Date:</strong> {booking.bookedDate ? new Date(booking.bookedDate.seconds * 1000).toLocaleDateString() : 'N/A'}</p>
+                                            <p><strong>Date:</strong> {booking.bookedDate ?? 'N/A'}</p>
                                             <p><strong>Slot:</strong> {booking.bookedSlot}</p>
                                         </div>
                                         <button 
                                             className='cancel-booking-btn'
-                                            onClick={() => handleCancelBooking(booking.id, userData.id)}
+                                            onClick={() => handleCancelBooking(booking.id, userData.id,booking.bookedMeetingRoomId)}
                                             disabled={cancellingBookingId === booking.id}
                                         >
                                             {cancellingBookingId === booking.id ? 'Cancelling...' : 'Cancel Booking'}
